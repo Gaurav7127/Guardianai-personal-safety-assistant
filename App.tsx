@@ -8,12 +8,17 @@ import FakeCallOverlay from './components/FakeCallOverlay';
 import { AppView } from './types';
 import { initializeOfflineData } from './services/storageService';
 
+// --- Define fixed heights for clarity (Used for calculating vertical padding) ---
+// Header height: Header (h-14 / 56px) + Offline Banner (h-[32px]) = 88px
+const HEADER_HEIGHT_PX = 88;
+// Bottom Nav height: 70px
+const FOOTER_HEIGHT_PX = 70;
+
 function App() {
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-    // Initialize local storage with default data
     initializeOfflineData();
 
     const handleOnline = () => setIsOnline(true);
@@ -157,12 +162,12 @@ function App() {
          </div>
       </aside>
 
-      {/* 2. Main Content Area (relative container for absolute positioning) */}
-      <div className="flex-1 relative h-full w-full">
+      {/* 2. Main Content Area Wrapper (This is the Flex Column) */}
+      <div className="flex-1 **flex flex-col** w-full overflow-hidden">
         
-        {/* 3. Mobile Header (Fixed Top Container - Now explicitly h-20) */}
-        <div className="md:hidden **fixed top-0 left-0 w-full** z-30 **h-[88px]**">
-          <header className="px-4 py-3 bg-white border-b border-slate-100 flex items-center justify-between shadow-sm **h-14**">
+        {/* 3. Mobile Header (Fixed Top Container - Still needs to be fixed for z-index) */}
+        <div className="md:hidden fixed top-0 left-0 w-full z-30 **h-[88px]**">
+          <header className="px-4 py-3 bg-white border-b border-slate-100 flex items-center justify-between shadow-sm h-14">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                  <Shield className="text-white w-5 h-5" />
@@ -179,25 +184,30 @@ function App() {
             )}
           </header>
 
-          {/* Offline Banner (Tucking it inside the fixed container) */}
+          {/* Offline Banner */}
           {!isOnline && (
-            <div className="bg-slate-800 text-white px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 z-10 **h-[32px]**">
+            <div className="bg-slate-800 text-white px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 z-10 h-[32px]">
               <WifiOff size={14} />
               <span>You are currently offline. Accessing cached safety guides and contacts.</span>
             </div>
           )}
         </div>
+        
+        {/* 3b. Header Spacer (Takes up space equal to the fixed header) */}
+        <div className="md:hidden **h-[88px]**"></div>
 
-        {/* 4. Scrollable Content (ABSOLUTE FILLER WITH PADDING) */}
-        {/* The p-4 provides side padding, the pt/pb classes provide the top/bottom clearance */}
-        <main className="absolute inset-0 overflow-y-auto scrollbar-hide **pt-[88px] pb-[70px]** p-4 md:pt-8 md:pb-8">
+        {/* 4. Scrollable Content (Takes up all remaining space and scrolls internally) */}
+        <main className="**flex-1 overflow-y-auto** scrollbar-hide p-4 md:p-8">
             <div className="max-w-5xl mx-auto h-full">
                 {renderContent()}
             </div>
         </main>
 
-        {/* 5. Mobile Bottom Navigation (FIXED BOTTOM - Explicitly set h-[70px]) */}
-        <nav className="md:hidden **fixed bottom-0 left-0 w-full** bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center **z-40 h-[70px]** shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        {/* 5b. Footer Spacer (Takes up space equal to the fixed footer) */}
+        <div className="md:hidden **h-[70px]**"></div>
+
+        {/* 5. Mobile Bottom Navigation (Fixed Bottom) */}
+        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center z-40 **h-[70px]** shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
           <button 
             onClick={() => setCurrentView(AppView.HOME)}
             className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.HOME ? 'text-indigo-600' : 'text-slate-400'}`}
