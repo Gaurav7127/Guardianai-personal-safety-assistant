@@ -160,7 +160,7 @@ const ChatInterface: React.FC = () => {
       
       // Specific check for missing API Key error from geminiService
       if (error.message && (error.message.includes("API Key") || error.message.includes("403"))) {
-          errorMessage = "⚠️ **System Error:** API Key is missing or invalid.\n\nPlease check your settings and ensure a valid Google Gemini API Key is provided in the `VITE_API_KEY` environment variable.";
+          errorMessage = "⚠️ **System Error:** API Key is missing or invalid.\n\nPlease check your settings and ensure a valid Google Gemini API Key is provided in the `GEMINI_API_KEY` environment variable.";
       }
 
       setMessages(prev => [
