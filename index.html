@@ -10,6 +10,12 @@
       body {
         font-family: 'Inter', sans-serif;
       }
+      **html, body, #root {**
+        **height: 100%;**
+        **margin: 0;**
+        **padding: 0;**
+        **overflow: hidden; /* This prevents the entire page from scrolling */**
+      **}
       /* Custom scrollbar for chat */
       .scrollbar-hide::-webkit-scrollbar {
           display: none;
