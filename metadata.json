@@ -1,0 +1,8 @@
+{
+  "name": "GuardianAI - Personal Safety Assistant",
+  "description": "An AI-powered personal safety assistant for women providing real-time advice, emergency contacts, self-defense guides, and situational awareness training.",
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation"
+  ]
+}
