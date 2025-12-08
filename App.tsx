@@ -206,51 +206,51 @@ function App() {
         {/* 5b. Footer Spacer (Takes up space equal to the fixed footer) */}
         <div className="md:hidden **h-[70px]**"></div>
 
-        {/* 5. Mobile Bottom Navigation (Fixed Bottom) */}
-        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center z-40 **h-[70px]** shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-          <button 
-            onClick={() => setCurrentView(AppView.HOME)}
-            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.HOME ? 'text-indigo-600' : 'text-slate-400'}`}
-          >
-            <Shield className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Home</span>
-          </button>
-          
-          <button 
-            onClick={() => setCurrentView(AppView.CHAT)}
-            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.CHAT ? 'text-indigo-600' : 'text-slate-400'}`}
-          >
-            <MessageCircle className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Chat</span>
-          </button>
+        {/* Mobile Bottom Navigation (Fixed Bottom) */}
+        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center z-40 h-[70px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] safe-area-bottom">
+          <button 
+            onClick={() => setCurrentView(AppView.HOME)}
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.HOME ? 'text-indigo-600' : 'text-slate-400'}`}
+          >
+            <Shield className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Home</span>
+          </button>
+          
+          <button 
+            onClick={() => setCurrentView(AppView.CHAT)}
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.CHAT ? 'text-indigo-600' : 'text-slate-400'}`}
+          >
+            <MessageCircle className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Chat</span>
+          </button>
 
-          <button 
-            onClick={() => setCurrentView(AppView.TOOLS)}
-            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.TOOLS ? 'text-purple-600' : 'text-slate-400'}`}
-          >
-            <Wrench className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Tools</span>
-          </button>
+          <button 
+            onClick={() => setCurrentView(AppView.TOOLS)}
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.TOOLS ? 'text-purple-600' : 'text-slate-400'}`}
+          >
+            <Wrench className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Tools</span>
+          </button>
 
-          <button 
-            onClick={() => setCurrentView(AppView.GUIDES)}
-            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.GUIDES ? 'text-indigo-600' : 'text-slate-400'}`}
-          >
-            <BookOpen className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Guides</span>
-          </button>
+          <button 
+            onClick={() => setCurrentView(AppView.GUIDES)}
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.GUIDES ? 'text-indigo-600' : 'text-slate-400'}`}
+          >
+            <BookOpen className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Guides</span>
+          </button>
 
-          <button 
-            onClick={() => setCurrentView(AppView.EMERGENCY)}
-            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.EMERGENCY ? 'text-red-600' : 'text-slate-400'}`}
-          >
-            <AlertCircle className="w-5 h-5" />
-            <span className="text-[10px] font-medium">SOS</span>
-          </button>
-        </nav>
-      </div>
-    </div>
-  );
+          <button 
+            onClick={() => setCurrentView(AppView.EMERGENCY)}
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.EMERGENCY ? 'text-red-600' : 'text-slate-400'}`}
+          >
+            <AlertCircle className="w-5 h-5" />
+            <span className="text-[10px] font-medium">SOS</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  );
 }
 
 export default App;
