@@ -17,7 +17,7 @@ const handler: Handler = async (event) => {
 
     // 3. Initialize Gemini (The Key is hidden here on the server)
     // Netlify accesses env vars via process.env automatically
-    const apiKey = process.env.VITE_API_KEY; 
+    const apiKey = process.env.GEMINI_API_KEY; 
     
     if (!apiKey) {
       return { statusCode: 500, body: 'Server Error: API Key missing in Netlify Settings' };
