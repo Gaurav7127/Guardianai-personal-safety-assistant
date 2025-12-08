@@ -1,64 +1,69 @@
-import { GoogleGenAI, Chat } from "@google/genai";
 import { SAFETY_KNOWLEDGE_BASE } from "../constants";
 
-let chatSession: Chat | null = null;
-
-const getAIClient = () => {
-  // Support both standard Node.js env and Vite (frontend) env variables
-  // When deploying to Netlify/Vercel, use VITE_API_KEY
-  const apiKey = process.env.API_KEY || (import.meta as any).env?.VITE_API_KEY;
-  
-  if (!apiKey) {
-    console.error("GuardianAI Error: API Key is missing.");
-    throw new Error("API Key is missing. Please set VITE_API_KEY in your environment variables.");
-  }
-  return new GoogleGenAI({ apiKey });
+// Helper to determine the API URL
+const getApiUrl = () => {
+  // In development, this points to localhost. In production, it points to your Netlify site.
+  // Netlify automatically handles the /.netlify/functions path.
+  return '/.netlify/functions/chat';
 };
 
-export const initializeChat = async (): Promise<Chat> => {
+export const sendMessageStream = async (message: string) => {
+  // NOTE: Streaming is complex with basic serverless functions. 
+  // For this implementation, we will convert to a standard request/response 
+  // to ensure reliability with the Netlify Function approach.
+  
   try {
-    const ai = getAIClient();
-    chatSession = ai.chats.create({
-      model: 'gemini-2.5-flash',
-      config: {
-        systemInstruction: SAFETY_KNOWLEDGE_BASE,
-        temperature: 0.4, // Keep it relatively deterministic and focused on safety
+    const response = await fetch(getApiUrl(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        message,
+        systemInstruction: SAFETY_KNOWLEDGE_BASE
+      }),
     });
-    return chatSession;
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Mimic the stream generator format your UI expects
+    // This allows us to switch backend logic without breaking ChatInterface.tsx
+    async function* mockStream() {
+      yield { text: data.text };
+    }
+
+    return mockStream();
+
   } catch (error) {
-    console.error("Failed to initialize chat:", error);
+    console.error("Chat API Error:", error);
     throw error;
   }
 };
 
-export const sendMessageStream = async (message: string) => {
-  if (!chatSession) {
-    try {
-      await initializeChat();
-    } catch (e) {
-      throw new Error("Chat could not be initialized. Check API Key.");
-    }
-  }
-  
-  if (!chatSession) {
-     throw new Error("Failed to initialize chat session");
-  }
-
-  return chatSession.sendMessageStream({ message });
+// We keep this for compatibility, but it now just calls the main function logic
+export const initializeChat = async () => {
+  return null; 
 };
 
 export const getQuickAdvice = async (topic: string): Promise<string> => {
     try {
-      const ai = getAIClient();
-      const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: `Provide a very short, bulleted list (max 3 items) of immediate safety actions for this situation based on your knowledge base: ${topic}`,
-          config: {
-              systemInstruction: SAFETY_KNOWLEDGE_BASE
-          }
+      const response = await fetch(getApiUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `Provide a very short, bulleted list (max 3 items) of immediate safety actions for this situation based on your knowledge base: ${topic}`,
+          systemInstruction: SAFETY_KNOWLEDGE_BASE
+        })
       });
-      return response.text || "Consult emergency services immediately if in danger.";
+
+      if (!response.ok) return "Consult emergency services immediately.";
+      const data = await response.json();
+      return data.text;
     } catch (error) {
       console.error("Quick advice error:", error);
       return "Unable to connect to AI. Please call 112.";
