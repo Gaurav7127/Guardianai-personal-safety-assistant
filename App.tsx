@@ -123,7 +123,7 @@ function App() {
   );
 
   return (
-    {/* >>> CHANGE 1: Use h-[100dvh] for consistent mobile viewport height */}
+    {/* 1. Parent Container uses h-[100dvh] (Dynamic Viewport Height) */}
     <div className="**h-[100dvh]** bg-slate-50 md:flex relative">
       
       {/* Global Overlays */}
@@ -157,13 +157,12 @@ function App() {
          </div>
       </aside>
 
-      {/* Main Content Area */}
-      {/* >>> CHANGE 2: Set inner container to h-full and remove original overflow-hidden */}
-      <div className="flex-1 flex flex-col **h-full** relative w-full">
+      {/* 2. Main Content Area (relative container for absolute positioning) */}
+      <div className="flex-1 **relative h-full** w-full">
         
-        {/* 3. Mobile Header (Fixed Top Container) */}
-        <div className="md:hidden **fixed top-0 left-0 w-full** z-30">
-          <header className="px-4 py-3 bg-white border-b border-slate-100 flex items-center justify-between shadow-sm">
+        {/* 3. Mobile Header (Fixed Top Container - Explicitly set height classes for calculation) */}
+        <div className="md:hidden **fixed top-0 left-0 w-full** z-30 **h-16**">
+          <header className="px-4 py-3 bg-white border-b border-slate-100 flex items-center justify-between shadow-sm **h-14**">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                  <Shield className="text-white w-5 h-5" />
@@ -180,25 +179,25 @@ function App() {
             )}
           </header>
 
-          {/* Offline Banner (Stays with the Fixed Header) */}
+          {/* Offline Banner (Tucking it inside the fixed container) */}
           {!isOnline && (
-            <div className="bg-slate-800 text-white px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 z-10">
+            <div className="bg-slate-800 text-white px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 z-10 **h-8**">
               <WifiOff size={14} />
               <span>You are currently offline. Accessing cached safety guides and contacts.</span>
             </div>
           )}
         </div>
 
-
-        {/* 4. Scrollable Content (ADDED MARGINS AND OVERFLOW) */}
-        <main className="flex-1 **overflow-y-auto** scrollbar-hide **mt-20 pb-24** p-4 md:p-8">
-            <div className="max-w-5xl mx-auto h-full">
-                {renderContent()}
-            </div>
+        {/* 4. Scrollable Content (ABSOLUTE FILLER WITH PADDING) */}
+        {/* pb-[70px] is the height of the bottom nav (approx 48px + padding) + extra margin */}
+        <main className="**absolute inset-0 overflow-y-auto** scrollbar-hide **pt-[56px] pb-[70px]** md:pt-8 md:pb-8 p-4 md:p-8">
+            <div className="max-w-5xl mx-auto h-full">
+                {renderContent()}
+            </div>
         </main>
 
-        {/* 5. Mobile Bottom Navigation (FIXED BOTTOM) */}
-        <nav className="md:hidden **fixed bottom-0 left-0 w-full** bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center **z-40** shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        {/* 5. Mobile Bottom Navigation (FIXED BOTTOM - Explicitly set height classes for calculation) */}
+        <nav className="md:hidden **fixed bottom-0 left-0 w-full** bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center **z-40 h-[60px]** shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
           <button 
             onClick={() => setCurrentView(AppView.HOME)}
             className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.HOME ? 'text-indigo-600' : 'text-slate-400'}`}
