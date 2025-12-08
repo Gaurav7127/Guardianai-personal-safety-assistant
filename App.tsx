@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, MessageCircle, BookOpen, AlertCircle, Menu, X, WifiOff, PenTool, Wrench } from 'lucide-react';
+import { Shield, MessageCircle, BookOpen, AlertCircle, WifiOff, Wrench } from 'lucide-react';
 import ChatInterface from './components/ChatInterface';
 import EmergencyView from './components/EmergencyView';
 import GuidesView from './components/GuidesView';
@@ -123,12 +123,13 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 md:flex relative">
+    {/* >>> CHANGE 1: Use h-[100dvh] for consistent mobile viewport height */}
+    <div className="**h-[100dvh]** bg-slate-50 md:flex relative">
       
       {/* Global Overlays */}
       <FakeCallOverlay />
 
-      {/* Desktop Sidebar */}
+      {/* Desktop Sidebar (unchanged) */}
       <aside className="hidden md:flex flex-col w-72 bg-white border-r border-slate-200 h-screen sticky top-0 shrink-0">
          <div className="p-6 border-b border-slate-100 flex items-center gap-3">
              <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-md">
@@ -157,43 +158,47 @@ function App() {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden relative w-full">
+      {/* >>> CHANGE 2: Set inner container to h-full and remove original overflow-hidden */}
+      <div className="flex-1 flex flex-col **h-full** relative w-full">
         
-        {/* Mobile Header */}
-        <header className="md:hidden px-4 py-3 bg-white border-b border-slate-100 sticky top-0 z-20 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-               <Shield className="text-white w-5 h-5" />
+        {/* 3. Mobile Header (Fixed Top Container) */}
+        <div className="md:hidden **fixed top-0 left-0 w-full** z-30">
+          <header className="px-4 py-3 bg-white border-b border-slate-100 flex items-center justify-between shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                 <Shield className="text-white w-5 h-5" />
+              </div>
+              <h1 className="font-bold text-lg tracking-tight text-slate-800">Guardian<span className="text-indigo-600">AI</span></h1>
             </div>
-            <h1 className="font-bold text-lg tracking-tight text-slate-800">Guardian<span className="text-indigo-600">AI</span></h1>
-          </div>
-          {currentView !== AppView.HOME && (
-             <button 
-               onClick={() => setCurrentView(AppView.HOME)}
-               className="text-xs font-medium text-slate-500 hover:text-indigo-600 bg-slate-100 px-3 py-1.5 rounded-full"
-             >
-               Back
-             </button>
+            {currentView !== AppView.HOME && (
+               <button 
+                 onClick={() => setCurrentView(AppView.HOME)}
+                 className="text-xs font-medium text-slate-500 hover:text-indigo-600 bg-slate-100 px-3 py-1.5 rounded-full"
+              >
+                 Back
+              </button>
+            )}
+          </header>
+
+          {/* Offline Banner (Stays with the Fixed Header) */}
+          {!isOnline && (
+            <div className="bg-slate-800 text-white px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 z-10">
+              <WifiOff size={14} />
+              <span>You are currently offline. Accessing cached safety guides and contacts.</span>
+            </div>
           )}
-        </header>
+        </div>
 
-        {/* Offline Banner */}
-        {!isOnline && (
-          <div className="bg-slate-800 text-white px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 sticky top-0 md:static z-10">
-            <WifiOff size={14} />
-            <span>You are currently offline. Accessing cached safety guides and contacts.</span>
-          </div>
-        )}
 
-        {/* Scrollable Content */}
-        <main className="flex-1 overflow-y-auto scrollbar-hide p-4 md:p-8">
+        {/* 4. Scrollable Content (ADDED MARGINS AND OVERFLOW) */}
+        <main className="flex-1 **overflow-y-auto** scrollbar-hide **mt-20 pb-24** p-4 md:p-8">
             <div className="max-w-5xl mx-auto h-full">
                 {renderContent()}
             </div>
         </main>
 
-        {/* Mobile Bottom Navigation */}
-        <nav className="md:hidden sticky bottom-0 bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        {/* 5. Mobile Bottom Navigation (FIXED BOTTOM) */}
+        <nav className="md:hidden **fixed bottom-0 left-0 w-full** bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center **z-40** shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
           <button 
             onClick={() => setCurrentView(AppView.HOME)}
             className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.HOME ? 'text-indigo-600' : 'text-slate-400'}`}
@@ -239,4 +244,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
