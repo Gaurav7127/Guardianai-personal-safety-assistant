@@ -157,50 +157,43 @@ function App() {
       </aside>
 
       {/* Main Content Area */}
-      {/* The main flex container. Its children (header, banner, main, nav) will determine the layout. */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative w-full">
         
-        {/* 1. Mobile Header (Fixed Top) */}
-        {/* We use a container here to hold both the header and the banner */}
-        <div className="md:hidden **fixed top-0 left-0 w-full** z-20">
-          <header className="px-4 py-3 bg-white border-b border-slate-100 flex items-center justify-between shadow-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                 <Shield className="text-white w-5 h-5" />
-              </div>
-              <h1 className="font-bold text-lg tracking-tight text-slate-800">Guardian<span className="text-indigo-600">AI</span></h1>
+        {/* Mobile Header */}
+        <header className="md:hidden px-4 py-3 bg-white border-b border-slate-100 sticky top-0 z-20 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+               <Shield className="text-white w-5 h-5" />
             </div>
-            {currentView !== AppView.HOME && (
-               <button 
-                 onClick={() => setCurrentView(AppView.HOME)}
-                 className="text-xs font-medium text-slate-500 hover:text-indigo-600 bg-slate-100 px-3 py-1.5 rounded-full"
-              >
-                 Back
-              </button>
-            )}
-          </header>
-        
+            <h1 className="font-bold text-lg tracking-tight text-slate-800">Guardian<span className="text-indigo-600">AI</span></h1>
+          </div>
+          {currentView !== AppView.HOME && (
+             <button 
+               onClick={() => setCurrentView(AppView.HOME)}
+               className="text-xs font-medium text-slate-500 hover:text-indigo-600 bg-slate-100 px-3 py-1.5 rounded-full"
+             >
+               Back
+             </button>
+          )}
+        </header>
 
-          {/* Offline Banner (Stays with the Fixed Header) */}
-          {!isOnline && (
-            <div className="bg-slate-800 text-white px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 z-10">
-              <WifiOff size={14} />
-              <span>You are currently offline. Accessing cached safety guides and contacts.</span>
-            </div>
-          )}
-        </div>
+        {/* Offline Banner */}
+        {!isOnline && (
+          <div className="bg-slate-800 text-white px-4 py-2 text-xs md:text-sm flex items-center justify-center gap-2 sticky top-0 md:static z-10">
+            <WifiOff size={14} />
+            <span>You are currently offline. Accessing cached safety guides and contacts.</span>
+          </div>
+        )}
 
-
-        {/* 2. Scrollable Content - ADDED CLEARANCE MARGINS */}
-        {/* We now apply top and bottom margins to push the content below the fixed header/banner and above the fixed navbar */}
-        <main className="flex-1 overflow-y-auto scrollbar-hide **mt-16 mb-[76px]** p-4 md:p-8">
-            <div className="max-w-5xl mx-auto **h-full**">
+        {/* Scrollable Content */}
+        <main className="flex-1 overflow-y-auto scrollbar-hide p-4 md:p-8">
+            <div className="max-w-5xl mx-auto h-full">
                 {renderContent()}
             </div>
         </main>
 
-        {/* 3. Mobile Bottom Navigation (Fixed Bottom) */}
-        <nav className="md:hidden **fixed bottom-0 left-0 w-full** bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center z-30 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        {/* Mobile Bottom Navigation */}
+        <nav className="md:hidden sticky bottom-0 bg-white border-t border-slate-200 px-2 py-3 flex justify-around items-center z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
           <button 
             onClick={() => setCurrentView(AppView.HOME)}
             className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${currentView === AppView.HOME ? 'text-indigo-600' : 'text-slate-400'}`}
@@ -246,4 +239,5 @@ function App() {
   );
 }
 
-export default App;
+export default App; 
+app.tsx
