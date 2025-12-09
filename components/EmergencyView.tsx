@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, AlertTriangle, Shield, Ambulance, Flame, Bell, MapPin, Plus, Trash2, Send, UserPlus, Mic, MicOff, Settings, Activity, X, Zap, Volume2, Search } from 'lucide-react';
+import { Phone, AlertTriangle, Shield, Ambulance, Flame, Bell, MapPin, Plus, Trash2, Send, UserPlus, Mic, MicOff, Settings, Activity, X, Zap, Volume2, Search, AlertCircle } from 'lucide-react';
 import { getStoredContacts, getStoredActions, getTrustedContacts, addTrustedContact, removeTrustedContact, getSOSCodeWord, saveSOSCodeWord } from '../services/storageService';
 import { SafetyContact, EmergencyAction, TrustedContact } from '../types';
 
@@ -41,6 +41,9 @@ const EmergencyView: React.FC = () => {
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorRef = useRef<OscillatorNode | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
+  // Ref to store the siren interval ID
+  const sirenIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
 
   useEffect(() => {
     setContacts(getStoredContacts());
@@ -203,13 +206,9 @@ const EmergencyView: React.FC = () => {
 
     // Siren effect: Modulate frequency
     osc.type = 'sawtooth';
+    
+    // Initial values
     osc.frequency.setValueAtTime(500, ctx.currentTime);
-    osc.frequency.linearRampToValueAtTime(1000, ctx.currentTime + 0.5);
-    
-    // Loop the frequency ramp
-    // Note: A true loop requires interval or LFO, simpler approach for reliable React component:
-    // We'll just set a high volume interval loop in JS to modulate pitch
-    
     gain.gain.value = 1.0;
     osc.start();
     
@@ -226,14 +225,17 @@ const EmergencyView: React.FC = () => {
         }
     }, 600);
     
-    // Store interval to clear it later (attaching to the ref object for convenience/hack or better use a ref var)
-    (oscillatorRef.current as any)._interval = interval;
+    // Store interval to clear it later
+    sirenIntervalRef.current = interval;
   };
 
   const stopSiren = () => {
     setIsSirenActive(false);
+    if (sirenIntervalRef.current) {
+        clearInterval(sirenIntervalRef.current);
+        sirenIntervalRef.current = null;
+    }
     if (oscillatorRef.current) {
-        clearInterval((oscillatorRef.current as any)._interval);
         try { oscillatorRef.current.stop(); } catch(e) {}
         oscillatorRef.current.disconnect();
         oscillatorRef.current = null;
@@ -293,7 +295,8 @@ const EmergencyView: React.FC = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        // FIX: Corrected Google Maps URL format
+        const mapsLink = `http://maps.google.com/maps?q=${latitude},${longitude}`; 
         const message = `SOS! I feel unsafe. Here is my current location: ${mapsLink}`;
         
         const primaryContact = trustedContacts[0].phone;
@@ -369,7 +372,7 @@ const EmergencyView: React.FC = () => {
   };
 
   const openNearbyMaps = (query: string) => {
-      window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}+near+me`, '_blank');
+      window.open(`http://maps.google.com/maps?q=${encodeURIComponent(query)}+near+me`, '_blank');
   };
 
   return (
@@ -381,17 +384,21 @@ const EmergencyView: React.FC = () => {
 
       <div className="space-y-6 pb-20 md:pb-0 relative z-10">
 
-      {/* NEW TOP POSITION: 1. Immediate Phone SOS (Moved from bottom) */}
-      <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg shadow-sm">
-        <h2 className="text-red-700 font-bold text-xl flex items-center gap-2">
-          <Bell className="w-6 h-6 animate-pulse" /> Immediate Phone SOS
-        </h2>
-        <p className="text-red-600 mt-2 md:text-lg">
-          Press your phone's power button <span className="font-bold">5 times</span> rapidly to trigger the system default SOS.
-        </p>
-      </div>
-      
-      {/* NEW POSITION: 2. Panic Siren (Moved from second spot) */}
+      {/* 1. IMMEDIATE PHONE SOS (FIXED: Replaced non-functional power button with working call button) */}
+      <a 
+          href="tel:112" // This is the mobile-functional call to action
+          className="w-full bg-red-700 text-white p-6 md:p-10 rounded-xl shadow-lg flex flex-col items-center justify-center gap-4 hover:bg-red-800 transition-colors cursor-pointer animate-pulse"
+      >
+          <AlertCircle className="w-12 h-12" />
+          <h2 className="text-2xl font-extrabold tracking-wide">
+             TAP TO DIAL EMERGENCY (112)
+          </h2>
+          <p className="text-red-200 text-sm md:text-base">
+             This immediately opens your phone's dialer.
+          </p>
+      </a>
+      
+      {/* 2. Panic Siren */}
       <div className={`rounded-xl shadow-lg border-2 transition-all overflow-hidden ${isSirenActive ? 'bg-red-600 border-red-700 animate-pulse' : 'bg-white border-slate-200'}`}>
           <div className="p-4 flex items-center justify-between">
               <div>
@@ -416,7 +423,7 @@ const EmergencyView: React.FC = () => {
           </div>
       </div>
 
-      {/* 3. Voice SOS Trigger (Now third spot) */}
+      {/* 3. Voice SOS Trigger */}
       <div className={`rounded-xl shadow-sm border overflow-hidden transition-all duration-500 ${isListening ? 'bg-red-50 border-red-200 shadow-red-100' : 'bg-white border-slate-200'}`}>
         <div className={`p-4 text-white flex justify-between items-center ${isListening ? 'bg-red-600' : 'bg-slate-700'}`}>
              <h3 className="font-bold flex items-center gap-2">
@@ -499,7 +506,7 @@ const EmergencyView: React.FC = () => {
         </div>
       </div>
       
-      {/* 4. Trusted Contacts (Now fourth spot) */}
+      {/* 4. Trusted Contacts */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="bg-indigo-600 p-4 text-white flex justify-between items-center">
              <h3 className="font-bold flex items-center gap-2">
@@ -587,7 +594,7 @@ const EmergencyView: React.FC = () => {
         </div>
       </div>
 
-      {/* 5. Find Nearby Help (Now fifth spot) */}
+      {/* 5. Find Nearby Help */}
       <div className="grid grid-cols-2 gap-4">
           <button 
             onClick={() => openNearbyMaps('police+station')}
@@ -610,7 +617,7 @@ const EmergencyView: React.FC = () => {
           </button>
       </div>
 
-      {/* 6. Official Helplines (Now sixth spot) */}
+      {/* 6. Official Helplines (India) */}
       <div>
         <h3 className="text-slate-800 font-bold text-xl mb-4 px-1 flex items-center gap-2">
             <Phone className="w-5 h-5 text-indigo-600"/> Helplines (India)
@@ -635,7 +642,7 @@ const EmergencyView: React.FC = () => {
         </div>
       </div>
 
-      {/* 7. SOS & Rapid Actions (Now seventh spot) */}
+      {/* 7. SOS & Rapid Actions */}
       <div>
         <h3 className="text-slate-800 font-bold text-xl mb-4 px-1 flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-orange-500"/> Rapid Action Cards
