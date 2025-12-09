@@ -46,12 +46,22 @@ function App() {
       default:
         return (
           <div className="space-y-6 pb-20 md:pb-0">
-            {/* Simple Header Area */}
-            <div className="pt-2 pb-4">
-              <h1 className="text-3xl font-bold text-slate-800">Hello, Friend</h1>
-              <p className="text-slate-500">How can I help you stay safe today?</p>
+            {/* Hero Banner */}
+            <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-2xl p-6 md:p-10 text-white shadow-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="max-w-lg">
+                <h1 className="text-2xl md:text-4xl font-bold mb-2">Welcome to GuardianAI</h1>
+                <p className="text-indigo-100 text-sm md:text-base mb-4 md:mb-0">
+                  Your personal AI companion for safety, awareness, and emergency response.
+                  Always here, always alert.
+                </p>
+              </div>
+              <button 
+                onClick={() => setCurrentView(AppView.CHAT)}
+                className="bg-white text-indigo-700 px-6 py-3 rounded-full font-bold text-sm md:text-base hover:bg-indigo-50 transition-colors shadow-sm whitespace-nowrap self-start md:self-center"
+              >
+                Start Chatting
+              </button>
             </div>
-
             {/* Primary Action - Emergency */}
             <button 
               onClick={() => setCurrentView(AppView.EMERGENCY)}
