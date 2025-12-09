@@ -87,23 +87,7 @@ function App() {
                </div>
             </button>
 
-            {/* Main AI Features */}
-            <div className="space-y-4">
-              <button 
-                onClick={() => setCurrentView(AppView.CHAT)}
-                className="w-full bg-indigo-600 p-6 rounded-xl text-white shadow-md hover:bg-indigo-700 transition-all flex items-center justify-start h-24"
-              >
-                <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                      <MessageCircle size={20} />
-                    </div>
-                    <div className="text-left">
-                      <span className="block font-bold text-lg">Safety Chat</span>
-                      <span className="text-indigo-200 text-sm">AI Personal Assistant</span>
-                    </div>
-                </div>
-              </button>
-            </div>
+           
 
             {/* Secondary Actions Grid */}
             <div className="grid grid-cols-2 gap-4">
