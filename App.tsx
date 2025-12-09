@@ -33,106 +33,115 @@ function App() {
   }, []);
 
   const renderContent = () => {
-    switch (currentView) {
-      case AppView.CHAT:
-        return <ChatInterface />;
-      case AppView.EMERGENCY:
-        return <EmergencyView />;
-      case AppView.GUIDES:
-        return <GuidesView />;
-      case AppView.TOOLS:
-        return <ToolsView />;
-      case AppView.HOME:
-      default:
-        return (
-          <div className="space-y-6 pb-20 md:pb-0">
-            {/* Hero Banner */}
+    switch (currentView) {
+      case AppView.CHAT:
+        return <ChatInterface />;
+      case AppView.EMERGENCY:
+        return <EmergencyView />;
+      case AppView.GUIDES:
+        return <GuidesView />;
+      case AppView.TOOLS:
+        return <ToolsView />;
+      case AppView.HOME:
+      default:
+        return (
+          <div className="space-y-6">
+            
+            {/* --- NEW HERO BANNER START ---
+            */}
             <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-2xl p-6 md:p-10 text-white shadow-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="max-w-lg">
-                <h1 className="text-2xl md:text-4xl font-bold mb-2">Welcome to GuardianAI</h1>
-                <p className="text-indigo-100 text-sm md:text-base mb-4 md:mb-0">
-                  Your personal AI companion for safety, awareness, and emergency response.
-                  Always here, always alert.
-                </p>
-              </div>
-              <button 
-                onClick={() => setCurrentView(AppView.CHAT)}
-                className="bg-white text-indigo-700 px-6 py-3 rounded-full font-bold text-sm md:text-base hover:bg-indigo-50 transition-colors shadow-sm whitespace-nowrap self-start md:self-center"
-              >
-                Start Chatting
-              </button>
-            </div>
-            {/* Primary Action - Emergency */}
-            <button 
-              onClick={() => setCurrentView(AppView.EMERGENCY)}
-              className="w-full bg-red-50 border border-red-100 p-6 rounded-2xl flex items-center justify-between hover:bg-red-100 transition-colors group shadow-sm"
-            >
-               <div className="flex items-center gap-4">
-                 <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform">
-                   <AlertCircle size={28} />
-                 </div>
-                 <div className="text-left">
-                   <span className="block text-xl font-bold text-red-700">Emergency & SOS</span>
-                   <span className="text-sm text-red-400">Rapid response tools</span>
-                 </div>
-               </div>
-               <div className="bg-white/50 p-2 rounded-full text-red-600">
-                 <AlertCircle size={20} />
-               </div>
-            </button>
+              <div className="max-w-lg">
+                <h1 className="text-2xl md:text-4xl font-bold mb-2">Welcome to GuardianAI</h1>
+                <p className="text-indigo-100 text-sm md:text-base mb-4 md:mb-0">
+                  Your personal AI companion for safety, awareness, and emergency response.
+                  Always here, always alert.
+                </p>
+              </div>
+              <button 
+                onClick={() => setCurrentView(AppView.CHAT)}
+                className="bg-white text-indigo-700 px-6 py-3 rounded-full font-bold text-sm md:text-base hover:bg-indigo-50 transition-colors shadow-sm whitespace-nowrap self-start md:self-center"
+              >
+                Start Chatting
+              </button>
+            </div>
+             {/* --- NEW HERO BANNER END ---
+             */}
 
-            {/* Main AI Features */}
-            <div>
-              <button 
-                onClick={() => setCurrentView(AppView.CHAT)}
-                className="w-full bg-indigo-600 p-6 rounded-2xl text-white shadow-md hover:bg-indigo-700 transition-all flex items-center justify-between h-32"
-              >
-                <div className="flex items-center gap-4">
-                    <div className="bg-white/20 w-16 h-16 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                      <MessageCircle size={32} />
-                    </div>
-                    <div className="text-left">
-                      <span className="block font-bold text-2xl">Safety Chat</span>
-                      <span className="text-indigo-200">AI Personal Assistant</span>
-                    </div>
-                </div>
-              </button>
-            </div>
 
-            {/* Secondary Actions */}
-            <div className="grid grid-cols-2 gap-4">
-               <button 
-                onClick={() => setCurrentView(AppView.TOOLS)}
-                className="bg-white border border-slate-200 p-4 rounded-xl flex items-center gap-3 hover:bg-slate-50 transition-colors"
-               >
-                 <div className="bg-purple-100 p-2 rounded-lg text-purple-600">
-                   <Wrench size={20} />
-                 </div>
-                 <span className="font-semibold text-slate-700">Tools</span>
-               </button>
+            {/* Primary Action - Emergency (Keeping the rest of your original content below the banner) */}
+            <button 
+              onClick={() => setCurrentView(AppView.EMERGENCY)}
+              className="w-full bg-red-50 border border-red-100 p-4 rounded-xl flex items-center justify-between hover:bg-red-100 transition-colors group shadow-sm"
+            >
+               <div className="flex items-center gap-4">
+                 <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                   <AlertCircle size={20} />
+                 </div>
+                 <div className="text-left">
+                   <span className="block font-semibold text-red-700">Emergency & SOS</span>
+                   <span className="text-sm text-red-400">Rapid response tools</span>
+                 </div>
+               </div>
+               <div className="text-red-600">
+                 <AlertCircle size={20} />
+               </div>
+            </button>
 
-               <button 
-                onClick={() => setCurrentView(AppView.GUIDES)}
-                className="bg-white border border-slate-200 p-4 rounded-xl flex items-center gap-3 hover:bg-slate-50 transition-colors"
-               >
-                 <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
-                   <BookOpen size={20} />
-                 </div>
-                 <span className="font-semibold text-slate-700">Guides</span>
-               </button>
-            </div>
+            {/* Main AI Features */}
+            <div className="space-y-4">
+              <button 
+                onClick={() => setCurrentView(AppView.CHAT)}
+                className="w-full bg-indigo-600 p-6 rounded-xl text-white shadow-md hover:bg-indigo-700 transition-all flex items-center justify-start h-24"
+              >
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                      <MessageCircle size={20} />
+                    </div>
+                    <div className="text-left">
+                      <span className="block font-bold text-lg">Safety Chat</span>
+                      <span className="text-indigo-200 text-sm">AI Personal Assistant</span>
+                    </div>
+                </div>
+              </button>
+            </div>
 
-            {/* Minimal Daily Tip */}
-            <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex gap-3 items-start">
-               <Shield className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-               <p className="text-sm text-emerald-800 font-medium leading-relaxed">
-                 Tip: Share your live location with family when traveling late at night.
-               </p>
-            </div>
-          </div>
-        );
-    }
-  };
+            {/* Secondary Actions Grid */}
+            <div className="grid grid-cols-2 gap-4">
+               <button 
+                onClick={() => setCurrentView(AppView.TOOLS)}
+                className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-center flex-col gap-2 h-24 hover:bg-slate-50 transition-colors"
+               >
+                 <div className="bg-purple-100 p-2 rounded-lg text-purple-600">
+                   <Wrench size={20} />
+                 </div>
+                 <span className="font-semibold text-slate-700 text-sm">Tools</span>
+               </button>
+
+               <button 
+                onClick={() => setCurrentView(AppView.GUIDES)}
+                className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-center flex-col gap-2 h-24 hover:bg-slate-50 transition-colors"
+               >
+                 <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
+                   <BookOpen size={20} />
+                 </div>
+                 <span className="font-semibold text-slate-700 text-sm">Guides</span>
+               </button>
+            </div>
+
+            {/* Daily Tip */}
+            <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100 flex gap-3 items-start">
+               <Shield className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+               <p className="text-sm text-emerald-800 font-medium leading-relaxed">
+                 Tip: Share your live location with family when traveling late at night.
+               </p>
+            </div>
+            
+            {/* Scroll Spacer */}
+            <div className="h-10"></div>
+          </div>
+        );
+    }
+  };
 
   const NavItem = ({ view, icon: Icon, label, colorClass = "text-slate-400", activeClass = "text-indigo-600 bg-indigo-50" }: any) => (
       <button 
